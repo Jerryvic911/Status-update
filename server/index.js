@@ -1,14 +1,14 @@
+import dotenv from 'dotenv'
+dotenv.config();
+
 import express from 'express';
-import dotenv from 'dotenv';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import mongoose from'mongoose';
 import authRouter from './routes/authRoutes.js';
 
+
 const app = express();
-
-dotenv.config();
-
 
 const PORT = process.env.PORT || 3000;
 const mongoDBURL = process.env.MONGODB_URI;

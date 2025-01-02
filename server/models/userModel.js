@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  verifyOtpExpirAt:{
+  verifyOtpExpireAt:{
     type: Number,
     default: 0
   },
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: '',
   },
-  resetOtpExpirAt: {
+  resetOtpExpireAt: {
     type: Number,
     default: 0,
   },
