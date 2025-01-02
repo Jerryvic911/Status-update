@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import mongoose from'mongoose';
+import authRouter from './routes/authRoutes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors({credentials: true}));
 app.get('/', (req, res) => {
   res.send('Hello Server!');
 });
+app.use('/api/auth', authRouter);
 
 
 
