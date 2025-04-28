@@ -6,7 +6,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import mongoose from'mongoose';
 import authRouter from './routes/authRoutes.js';
-
+import postRoutes from './routes/postRoute.js';
 
 const app = express();
 
@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
   res.send('Hello Server!');
 });
 app.use('/api/auth', authRouter);
+app.use("/api/posts", postRoutes);
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working' });
+});
 
 
 
