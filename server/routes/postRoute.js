@@ -33,7 +33,9 @@ postRoutes.patch("/:id", updatePost)
 postRoutes.delete("/:id", deletePost)
 // router.patch("/posts/:id/like", protect, likePost);
 // router.patch("/posts/:id/unlike", protect, unlikePost);
-router.patch('/posts/:id/toggle-like', protect, toggleLikePost);
+postRoutes.put('/:id/toggle-like', protect, toggleLikePost);
+
+
 
 
 export default postRoutes

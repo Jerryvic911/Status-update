@@ -33,6 +33,7 @@ export const createPost = async (req, res, next) => {
       text,
       user: req.user.id,
       userName: user.name, // Store the user's name directly in the post
+      likes: []
     });
     await post.save();
 
