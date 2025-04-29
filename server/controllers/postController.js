@@ -47,16 +47,29 @@ export const createPost = async (req, res, next) => {
 
 // Get all posts (could be paginated in a real app)
 export const getAllPosts = async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+  const skip = (page - 1) * limit;
+
   try {
     const posts = await Post.find()
       .sort({ createdAt: -1 })
-      .select("text userName createdAt updatedAt"); // Include userName but exclude user ID for security
+      .skip(skip)
+      .limit(limit)
+      .select("text userName createdAt updatedAt");
 
-    res.status(200).json(posts);
+    const totalPosts = await Post.countDocuments();
+
+    res.status(200).json({
+      posts,
+      totalPages: Math.ceil(totalPosts / limit),
+      currentPage: page,
+    });
   } catch (error) {
     next(error);
   }
 };
+
 
 // Get posts by the logged-in user
 export const getUserPosts = async (req, res, next) => {
@@ -166,7 +179,65 @@ export const deletePost = async (req, res, next) => {
 };
 
 // Like a post
-export const likePost = async (req, res, next) => {
+// export const likePost = async (req, res, next) => {
+//   try {
+//     const post = await Post.findById(req.params.id);
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+
+//     // Check if user already liked
+//     if (post.likes.includes(req.user.id)) {
+//       return res.status(400).json({ message: "You already liked this post" });
+//     }
+
+//     // Add user to likes array
+//     post.likes.push(req.user.id);
+//     await post.save();
+
+//     res.status(200).json({
+//       message: "Post liked successfully",
+//       likes: post.likes.length,  // return number of likes
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+// Unlike a post
+// export const unlikePost = async (req, res, next) => {
+//   try {
+//     const post = await Post.findById(req.params.id);
+
+//     if (!post) {
+//       return res.status(404).json({ message: "Post not found" });
+//     }
+
+//     // Check if user has already liked
+//     const likeIndex = post.likes.indexOf(req.user.id);
+
+//     if (likeIndex === -1) {
+//       return res.status(400).json({ message: "You have not liked this post yet" });
+//     }
+
+//     // Remove user's ID from the likes array
+//     post.likes.splice(likeIndex, 1);
+//     await post.save();
+
+//     res.status(200).json({
+//       message: "Post unliked successfully",
+//       likes: post.likes.length, // now fewer likes
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+
+// Toggle Like/Unlike a Post
+// Toggle Like / Unlike Post
+export const toggleLikePost = async (req, res, next) => {
   try {
     const post = await Post.findById(req.params.id);
 
@@ -174,13 +245,22 @@ export const likePost = async (req, res, next) => {
       return res.status(404).json({ message: "Post not found" });
     }
 
-    post.likes += 1;
-    await post.save();
+    const userId = req.user.id;
 
-    res.status(200).json({
-      message: "Post liked successfully",
-      likes: post.likes,
-    });
+    // Check if the user has already liked the post
+    const liked = post.likes.includes(userId);
+
+    if (liked) {
+      // Unlike
+      post.likes = post.likes.filter(id => id.toString() !== userId);
+      await post.save();
+      res.status(200).json({ message: "Post unliked", liked: false, likesCount: post.likes.length });
+    } else {
+      // Like
+      post.likes.push(userId);
+      await post.save();
+      res.status(200).json({ message: "Post liked", liked: true, likesCount: post.likes.length });
+    }
   } catch (error) {
     next(error);
   }

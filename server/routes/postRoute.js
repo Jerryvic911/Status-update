@@ -6,7 +6,9 @@ import {
   getPostById,
   updatePost,
   deletePost,
-  likePost
+  // likePost,
+  // unlikePost,
+  toggleLikePost
 } from "../controllers/postController.js"
 import { protect } from "../middleware/authmiddleware.js"
 
@@ -27,8 +29,11 @@ postRoutes.get("/my-posts", getUserPosts)
 
 // Get, update, or delete a specific post by ID
 postRoutes.get("/:id", getPostById)
-postRoutes.put("/:id", updatePost)
+postRoutes.patch("/:id", updatePost)
 postRoutes.delete("/:id", deletePost)
-router.patch("/posts/:id/like", protect, likePost);
+// router.patch("/posts/:id/like", protect, likePost);
+// router.patch("/posts/:id/unlike", protect, unlikePost);
+router.patch('/posts/:id/toggle-like', protect, toggleLikePost);
+
 
 export default postRoutes
