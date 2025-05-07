@@ -25,9 +25,6 @@ app.use("/api/posts", postRoutes);
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API is working' });
 });
-app.patch('/posts/:id/test', (req, res) => {
-  res.send('Test route works!');
-});
 
 
 
