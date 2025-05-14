@@ -1,4 +1,5 @@
 import React from 'react'
+import  Link  from 'next/link'
 
 const Hero = () => {
   return (
@@ -11,9 +12,11 @@ const Hero = () => {
     <p className="text-xl text-white/80 mb-8">
       Create posts, connect with others, and be part of the conversation.
     </p>
+  <Link href="/Feed">
     <button className="px-6 py-3 bg-white text-black font-semibold rounded-xl shadow-md hover:bg-gray-200 transition">
       Get Started
     </button>
+  </Link>
   </div>
 </section>
     </div>

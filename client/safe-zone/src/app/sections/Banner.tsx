@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 
 const Banner = () => {
   return (
@@ -9,9 +10,11 @@ const Banner = () => {
       <p className="text-lg mb-6 drop-shadow-sm">
         Join now and be part of a minimal, expressive, and welcoming space.
       </p>
+      <Link href="/Feed">
       <button className="px-8 py-3 bg-white text-[#ff1b6b] font-semibold rounded-full shadow hover:bg-pink-100 transition">
         Create Your First Post
       </button>
+      </Link>
     </section>
   );
 };

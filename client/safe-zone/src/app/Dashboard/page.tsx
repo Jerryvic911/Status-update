@@ -10,7 +10,7 @@ const Profile = () => {
          <IoChevronBackCircle className='size-7' />
         </Link>
       </div>
-      <h1>hello</h1>
+      <h1>My Profile</h1>
     </div>
   )
 }
