@@ -15,7 +15,13 @@ const mongoDBURL = process.env.MONGODB_URI;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({credentials: true}));
+// app.use(cors({credentials: true}));
+app.use(
+  cors({
+    origin: 'https://your-frontend-url.vercel.app', // Replace with your actual frontend URL
+    credentials: true,
+  })
+)
 
 app.get('/', (req, res) => {
   res.send('Hello Server!');
