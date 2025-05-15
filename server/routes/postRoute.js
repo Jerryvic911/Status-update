@@ -16,7 +16,7 @@ import { protect } from "../middleware/authmiddleware.js"
 const postRoutes = express.Router()
 
 // All routes are protected - require authentication
-postRoutes.use(protect)
+// postRoutes.use(protect)
 
 // Create a new post
 postRoutes.post("/", createPost)

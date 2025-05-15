@@ -18,7 +18,7 @@ app.use(cookieParser());
 // app.use(cors({credentials: true}));
 app.use(
   cors({
-    origin: 'https://your-frontend-url.vercel.app', // Replace with your actual frontend URL
+    origin: 'https://safe-zone-ecru.vercel.app', // Replace with your actual frontend URL
     credentials: true,
   })
 )
@@ -28,11 +28,6 @@ app.get('/', (req, res) => {
 });
 app.use('/api/auth', authRouter);
 app.use("/api/posts", postRoutes);
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working' });
-});
-
-
 
 
 if (!mongoDBURL) {
