@@ -18,7 +18,7 @@ app.use(cookieParser());
 // app.use(cors({credentials: true}));
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://safe-zone-d5xgwdbm6-aceroger791gmailcoms-projects.vercel.app/", "https://safe-zone-ecru.vercel.app/", "https://safe-zone-aceroger791gmailcoms-projects.vercel.app/",], // Replace with your actual frontend URL
+    origin: ["http://localhost:3000", "https://safe-zone-d5xgwdbm6-aceroger791gmailcoms-projects.vercel.app", "https://safe-zone-ecru.vercel.app", "https://safe-zone-aceroger791gmailcoms-projects.vercel.app", "https://safe-zone-bql5nllqq-aceroger791gmailcoms-projects.vercel.app"], // Replace with your actual frontend URL
     credentials: true,
   })
 )
