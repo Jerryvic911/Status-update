@@ -17,7 +17,7 @@ const Landingpage = () => {
         <Hero />
       </div>
 
-      <div id="about">
+      <div id="about" className="bg-black">
         <About />
       </div>
 
