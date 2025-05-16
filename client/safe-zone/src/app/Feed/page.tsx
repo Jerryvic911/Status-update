@@ -77,11 +77,11 @@ const Feed = () => {
             </div>
           ))}
 
-        <Link href="/create-post">
+       
           <button className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white p-4 rounded-full shadow-lg transition">
             +
           </button>
-        </Link>
+      
       </div>
     </div>
   );
