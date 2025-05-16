@@ -21,7 +21,7 @@ const Feed = () => {
  useEffect(() => {
   const fetchPosts = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}api/posts/all`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/all`);
       if (!res.ok) throw new Error("Failed to fetch posts");
       const data: { posts: Post[] } = await res.json();
       setPosts(data.posts);
