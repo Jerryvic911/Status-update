@@ -109,4 +109,3 @@ export default function VerifyEmail() {
     </div>
   )
 }
-export const dynamicPage = "force-dynamic"
