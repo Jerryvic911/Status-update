@@ -1,7 +1,5 @@
 "use client"
-
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 
@@ -52,7 +50,7 @@ export default function VerifyEmail() {
     setMessage("")
     setError("")
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/resend-otp`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/resend-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -111,3 +109,4 @@ export default function VerifyEmail() {
     </div>
   )
 }
+export const dynamicPage = "force-dynamic"
