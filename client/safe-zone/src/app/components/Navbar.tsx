@@ -48,7 +48,7 @@ const Navbar = () => {
             <Link href="/login">Login</Link>
           </li>
           <li className="hover:text-blue-300 cursor-pointer">
-            <Link href="/signup">Sign-up</Link>
+            <Link href="/sign-up">Sign-up</Link>
           </li>
           <Link href="/Dashboard">
             <li>

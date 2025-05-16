@@ -18,7 +18,7 @@ app.use(cookieParser());
 // app.use(cors({credentials: true}));
 app.use(
   cors({
-    origin: 'https://safe-zone-ecru.vercel.app', // Replace with your actual frontend URL
+    origin: ["http://localhost:3000", "https://your-frontend.vercel.app"], // Replace with your actual frontend URL
     credentials: true,
   })
 )
