@@ -27,7 +27,7 @@ export default function VerifyEmail() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ""
-      const res = await fetch(`${apiUrl}/api/auth/verify-email`, {
+      const res = await fetch(`${apiUrl}api/auth/verify-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, otp }),
@@ -58,7 +58,7 @@ export default function VerifyEmail() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || ""
-      const res = await fetch(`${apiUrl}/api/auth/resend-otp`, {
+      const res = await fetch(`${apiUrl}api/auth/resend-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
