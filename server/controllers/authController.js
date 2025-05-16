@@ -88,46 +88,59 @@ export const Logout = (req, res, next) => {
 
 export const resendOtp = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Get userId from the authenticated request
-    console.log("User  ID:", userId); // Log the userId for debugging
+    let user;
 
-    const user = await User.findById(userId);
-    console.log("User  found:", user); // Log the user object
-
-    if (!user) {
-      return res.status(400).json({ message: "User  not found" });
+    // 1. Check if token user exists
+    if (req.user && req.user.id) {
+      user = await User.findById(req.user.id);
     }
 
+    // 2. If not, try to find user by email from request body
+    else if (req.body.email) {
+      user = await User.findOne({ email: req.body.email });
+    }
+
+    // 3. If user not found
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // 4. If user already verified
     if (user.isAccountVerified) {
       return res.status(400).json({ message: "Account already verified" });
     }
 
-    if (user.verifyOtpExpireAt && user.verifyOtpExpireAt > Date.now() - 60000) { // 1 minute = 60,000 ms
+    // 5. Prevent spamming (1 min delay)
+    if (user.verifyOtpExpireAt && user.verifyOtpExpireAt > Date.now() - 60000) {
       return res.status(429).json({ message: "Please wait a minute before requesting a new OTP" });
     }
 
+    // 6. Generate and hash OTP
     const otp = String(Math.floor(100000 + Math.random() * 900000));
-    //Hash OTP before saving 
     const hashedOtp = createHash('sha256').update(otp).digest('hex');
+
     user.verifyOtp = hashedOtp;
-    user.verifyOtpExpireAt = Date.now() + 5 * 60 * 1000; // 5 minutes 
+    user.verifyOtpExpireAt = Date.now() + 5 * 60 * 1000; // 5 mins
     await user.save();
 
+    // 7. Send email
     const mailOptions = {
       from: process.env.SENDER_EMAIL,
       to: user.email,
-      subject: "Welcome to Our Service!",
-      text: `Hello ${user.name},\n\nPlease use the following OTP to verify your account: ${otp}\n\nThis OTP will expire in 5 minutes.\n\nBest regards,\nJAYCORP`,
+      subject: "Your OTP Code",
+      text: `Hello ${user.name},\n\nYour new OTP is: ${otp}\n\nThis code expires in 5 minutes.\n\nBest regards,\nJAYCORP`,
     };
 
     await transporter.sendMail(mailOptions);
-    res.status(200).json({ message: "OTP sent successfully" });
+
+    return res.status(200).json({ message: "OTP sent successfully" });
+
   } catch (error) {
-    console.error("Error in sendVerifyOtp:", error); // Log the error for debugging
+    console.error("Error in resendOtp:", error);
     return res.status(500).json({ message: "Failed to send OTP email, try again later" });
-    
   }
 };
+
 
 export const verifyEmail = async (req, res, next) => {
   const { email, otp } = req.body;
