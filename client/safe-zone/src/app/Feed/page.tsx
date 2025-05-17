@@ -18,26 +18,26 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
- useEffect(() => {
-  const fetchPosts = async () => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/all`);
-      if (!res.ok) throw new Error("Failed to fetch posts");
-      const data: { posts: Post[] } = await res.json();
-      setPosts(data.posts);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong");
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/all`);
+        if (!res.ok) throw new Error("Failed to fetch posts");
+        const data: { posts: Post[] } = await res.json();
+        setPosts(data.posts);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Something went wrong");
+        }
+      } finally {
+        setLoading(false);
       }
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  fetchPosts();
-}, []);
+    fetchPosts();
+  }, []);
 
 
   return (
@@ -77,11 +77,12 @@ const Feed = () => {
             </div>
           ))}
 
-       
+        <Link href="/CreatePost">
           <button className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white p-4 rounded-full shadow-lg transition">
             +
           </button>
-      
+        </Link>
+
       </div>
     </div>
   );
