@@ -23,7 +23,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/30 backdrop-blur-lg border-b border-white/40 shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+       <Link href="/">  
         <h1 className="text-xl font-bold text-white">Safe-zone</h1>
+       </Link>
         <ul className="flex gap-6 text-white">
           <li>
             <a href="#hero" onClick={(e) => scrollToSection(e, "hero")} className="hover:text-blue-300 cursor-pointer">
