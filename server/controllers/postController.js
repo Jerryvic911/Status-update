@@ -57,7 +57,7 @@ export const getAllPosts = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
-      .select("text userName createdAt updatedAt");
+      .select("text userName createdAt updatedAt likes");
 
     const totalPosts = await Post.countDocuments();
 

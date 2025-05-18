@@ -18,34 +18,34 @@ const Feed = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string>("");
+
+  // Get current userId on client side after hydration
+  useEffect(() => {
+    const id = localStorage.getItem("userId") || "";
+    setCurrentUserId(id);
+  }, []);
+
+  const fetchPosts = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/all`, {
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Failed to fetch posts");
+      const data: { posts: Post[] } = await res.json();
+      setPosts(data.posts);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/all`, {
-          credentials: "include", // if your API needs cookie/auth
-        });
-        if (!res.ok) throw new Error("Failed to fetch posts");
-        const data: { posts: Post[] } = await res.json();
-
-        // Normalize likes to always be an array
-        const normalizedPosts = data.posts.map(post => ({
-          ...post,
-          likes: post.likes ?? [],
-        }));
-
-        setPosts(normalizedPosts);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Something went wrong");
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchPosts();
   }, []);
 
@@ -53,29 +53,29 @@ const Feed = () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}/toggle-like`, {
         method: "PUT",
-        credentials: "include", // to send cookies with request
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
       });
 
-      const data = await res.json();
-
       if (res.ok) {
+        // Locally update the likes instead of re-fetching everything
         setPosts((prevPosts) =>
-          prevPosts.map((post) =>
-            post._id === postId
-              ? {
-                  ...post,
-                  likes: data.liked
-                    ? [...post.likes, "temp"] // Add dummy like for UI
-                    : post.likes.slice(0, -1), // Remove last like for UI
-                }
-              : post
-          )
+          prevPosts.map((post) => {
+            if (post._id === postId) {
+              const alreadyLiked = post.likes.includes(currentUserId);
+              const updatedLikes = alreadyLiked
+                ? post.likes.filter((id) => id !== currentUserId)
+                : [...post.likes, currentUserId];
+              return { ...post, likes: updatedLikes };
+            }
+            return post;
+          })
         );
       } else {
-        console.error("Toggle like failed:", data.message);
+        const data = await res.json();
+        console.error("Like toggle failed:", data.message);
       }
     } catch (err) {
       console.error("Error toggling like:", err);
@@ -93,18 +93,14 @@ const Feed = () => {
         <h1 className="text-3xl font-bold mb-4 text-center">Feed</h1>
 
         {loading && <p className="text-center">Loading posts...</p>}
-
-        {error && (
-          <p className="text-center text-red-500">Error loading posts: {error}</p>
-        )}
-
+        {error && <p className="text-center text-red-500">Error: {error}</p>}
         {!loading && !error && posts.length === 0 && (
-          <p className="text-center text-white/60">No posts available yet.</p>
+          <p className="text-center text-white/60">No posts yet.</p>
         )}
 
-        {!loading &&
-          !error &&
-          posts.map((post) => (
+        {posts.map((post) => {
+          const likedByUser = currentUserId && post.likes.includes(currentUserId);
+          return (
             <div
               key={post._id}
               className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl shadow-md"
@@ -118,20 +114,21 @@ const Feed = () => {
               <div className="mt-3 flex items-center gap-2">
                 <button
                   onClick={() => handleToggleLike(post._id)}
-                  className="text-pink-500 hover:text-pink-400 transition"
+                  className={`transition ${
+                    likedByUser ? "text-pink-500" : "text-white/50 hover:text-pink-400"
+                  }`}
                 >
-                  {(post.likes?.length ?? 0) > 0 ? (
+                  {likedByUser ? (
                     <AiFillLike className="inline text-xl" />
                   ) : (
                     <AiOutlineLike className="inline text-xl" />
                   )}
                 </button>
-                <span className="text-white/70 text-sm">
-                  {post.likes?.length ?? 0}
-                </span>
+                <span className="text-white/70 text-sm">{post.likes?.length || 0}</span>
               </div>
             </div>
-          ))}
+          );
+        })}
 
         <Link href="/CreatePost">
           <button className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white p-4 rounded-full shadow-lg transition">

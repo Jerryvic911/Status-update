@@ -30,6 +30,10 @@ export default function Login() {
 
       if (!res.ok) throw new Error(data.message || "Login failed")
 
+// ✅ Save user ID to localStorage for use across pages
+
+        localStorage.setItem("userId", data.user._id);
+
       // Redirect to homepage or dashboard
       router.push("/Feed")
     } catch (err: unknown) {
