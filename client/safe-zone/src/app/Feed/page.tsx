@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IoChevronBackCircle } from "react-icons/io5";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 import Link from "next/link";
+import Navbar from "../components/Navbar";
 
 type Post = {
   _id: string;
@@ -84,6 +85,7 @@ const Feed = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#2b2b2b] to-[#1a1a1a] text-white py-7">
+      <Navbar/>
       <div>
         <Link href="/">
           <IoChevronBackCircle className="size-7" />

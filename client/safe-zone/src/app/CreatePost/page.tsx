@@ -2,14 +2,17 @@
 import { useState } from "react";
 import { createPost } from "@/lib/api";
 import Navbar from "../components/Navbar";
+import { useRouter } from "next/navigation"
 
 export default function CreatePostForm() {
   const [text, setText] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    router.push("/Feed");
     const result = await createPost(text);
     if ("_id" in result) {
       setMessage("✅ Post created!");

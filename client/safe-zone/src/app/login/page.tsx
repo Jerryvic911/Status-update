@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 
@@ -22,7 +21,7 @@ export default function Login() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        credentials: "include", // important for sending cookies
         body: JSON.stringify(form),
       })
 
@@ -30,14 +29,14 @@ export default function Login() {
 
       if (!res.ok) throw new Error(data.message || "Login failed")
 
-// ✅ Save user ID to localStorage for use across pages
+      // ✅ Save token and user data in localStorage
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("userId", data.user._id)
+      localStorage.setItem("userName", data.user.name)
 
-        localStorage.setItem("userId", data.user._id);
-
-      // Redirect to homepage or dashboard
+      // ✅ Redirect to Feed
       router.push("/Feed")
     } catch (err: unknown) {
-      // Type-safe error handling
       if (err instanceof Error) {
         setError(err.message)
       } else {
@@ -71,7 +70,10 @@ export default function Login() {
           required
           className="w-full border p-2 rounded"
         />
-        <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">
+        <button
+          type="submit"
+          className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+        >
           Login
         </button>
       </form>
