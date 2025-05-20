@@ -26,9 +26,9 @@ const Footer = () => {
           <h3 className="text-lg font-semibold mb-2 text-white">Stay Connected</h3>
           <p className="text-sm">Follow us or reach out anytime.</p>
           <div className="flex justify-center md:justify-start gap-4 mt-3">
-            <a href="#" className="hover:text-white transition">Twitter</a>
-            <a href="#" className="hover:text-white transition">GitHub</a>
-            <a href="#" className="hover:text-white transition">Email</a>
+            <a href="https://x.com/Jeremia14045365" className="hover:text-white transition">Twitter</a>
+            <a href="https://github.com/Jerryvic911" className="hover:text-white transition">GitHub</a>
+            <a href="Jeremiahv791@gmail.com" className="hover:text-white transition">Email</a>
           </div>
         </div>
       </div>
