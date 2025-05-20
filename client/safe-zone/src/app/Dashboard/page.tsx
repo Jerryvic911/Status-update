@@ -119,10 +119,10 @@ const Profile = () => {
       </div>
 
       <h1 className='text-2xl font-bold mb-1'>My Profile</h1>
-      {userName && <p className="text-lg text-gray-700 mb-4">Welcome, {userName}!</p>}
+      {userName && <p className="text-lg font-bold text-center text-gray-700 mb-4">Welcome, {userName}!</p>}
 
       {loading ? (
-        <p>Loading posts...</p>
+        <p className='text-center font-bold text-gray-700 text-3xl'>Loading posts...</p>
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : (
