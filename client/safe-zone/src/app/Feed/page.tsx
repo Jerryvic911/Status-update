@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { IoChevronBackCircle } from "react-icons/io5";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
+import { FaArrowUp } from "react-icons/fa";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 
@@ -20,21 +21,20 @@ const Feed = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Get current userId on client side after hydration
-useEffect(() => {
-  const id = localStorage.getItem("userId");
-  const token = localStorage.getItem("token");
+  useEffect(() => {
+    const id = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
 
-  // If token or userId is missing, redirect to home/login
-  if (!token || !id) {
-    window.location.href = "/sign-up";
-    return;
-  }
+    if (!token || !id) {
+      window.location.href = "/sign-up";
+      return;
+    }
 
-  setCurrentUserId(id);
-}, []);
-
+    setCurrentUserId(id);
+  }, []);
 
   const fetchPosts = async () => {
     try {
@@ -60,46 +60,64 @@ useEffect(() => {
   }, []);
 
   const handleToggleLike = async (postId: string) => {
-  if (!currentUserId) {
-    alert("Please log in to like posts.");
-    return;
-  }
-
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}/toggle-like`, {
-      method: "PUT",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (res.ok) {
-      setPosts((prevPosts) =>
-        prevPosts.map((post) => {
-          if (post._id === postId) {
-            const alreadyLiked = post.likes.includes(currentUserId);
-            const updatedLikes = alreadyLiked
-              ? post.likes.filter((id) => id !== currentUserId)
-              : [...post.likes, currentUserId];
-            return { ...post, likes: updatedLikes };
-          }
-          return post;
-        })
-      );
-    } else {
-      const data = await res.json();
-      console.error("Like toggle failed:", data.message);
+    if (!currentUserId) {
+      alert("Please log in to like posts.");
+      return;
     }
-  } catch (err) {
-    console.error("Error toggling like:", err);
-  }
-};
 
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}/toggle-like`, {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.ok) {
+        setPosts((prevPosts) =>
+          prevPosts.map((post) => {
+            if (post._id === postId) {
+              const alreadyLiked = post.likes.includes(currentUserId);
+              const updatedLikes = alreadyLiked
+                ? post.likes.filter((id) => id !== currentUserId)
+                : [...post.likes, currentUserId];
+              return { ...post, likes: updatedLikes };
+            }
+            return post;
+          })
+        );
+      } else {
+        const data = await res.json();
+        console.error("Like toggle failed:", data.message);
+      }
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    }
+  };
+
+  // Scroll event listener for showing "Back to Top" button
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+
+      // Show when near bottom of page
+      setShowScrollTop(scrollY + windowHeight >= fullHeight - 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#2b2b2b] to-[#1a1a1a] text-white py-7">
-      <Navbar/>
+      <Navbar />
       <div>
         <Link href="/">
           <IoChevronBackCircle className="size-7" />
@@ -151,6 +169,15 @@ useEffect(() => {
             +
           </button>
         </Link>
+
+        {showScrollTop && (
+          <button
+            onClick={scrollToTop}
+            className="fixed bottom-20 right-6 bg-white text-black p-3 rounded-full shadow-lg hover:bg-gray-200 transition"
+          >
+            <FaArrowUp className="text-xl" />
+          </button>
+        )}
       </div>
     </div>
   );

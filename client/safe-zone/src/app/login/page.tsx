@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" })
@@ -46,6 +47,11 @@ export default function Login() {
   }
 
   return (
+    <div className="text-center">
+      
+    <Link href="/" className="mt-5">
+      <h1 className="mt-7 text-3xl font-bold ">SAFE-ZONE</h1>
+     </Link>
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
 
@@ -85,6 +91,8 @@ export default function Login() {
           </a>
         </p>
       </div>
+    </div>
+    
     </div>
   )
 }
