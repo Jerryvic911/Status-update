@@ -127,7 +127,7 @@ const Profile = () => {
         <p className="text-red-500">{error}</p>
       ) : (
         posts.length === 0 ? (
-          <p>No posts yet.</p>
+          <p className='text-center font-bold text-gray-700 text-3xl'>No posts yet.</p>
         ) : (
           posts.map(post => (
             <div key={post._id} className='border p-3 rounded-lg mb-4'>
