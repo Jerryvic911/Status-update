@@ -60,7 +60,7 @@ const EditPost = () => {
   return (
     <div className="p-4 max-w-xl mx-auto">
       <div className="flex items-center gap-4 mb-4">
-        <Link href="/Feed">
+        <Link href="/Dashboard">
           <IoChevronBackCircle className="size-7 cursor-pointer" />
         </Link>
         <h1 className="text-xl font-semibold">Edit Post</h1>

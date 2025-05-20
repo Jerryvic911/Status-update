@@ -106,7 +106,7 @@ const Profile = () => {
   return (
     <div className='p-4'>
       <div className='flex justify-between items-center mb-4'>
-        <Link href="/">
+        <Link href="/Feed">
           <IoChevronBackCircle className='size-7 cursor-pointer' />
         </Link>
         {/* Logout Button */}
