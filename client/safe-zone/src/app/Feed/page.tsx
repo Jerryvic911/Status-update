@@ -22,10 +22,19 @@ const Feed = () => {
   const [currentUserId, setCurrentUserId] = useState<string>("");
 
   // Get current userId on client side after hydration
-  useEffect(() => {
-    const id = localStorage.getItem("userId") || "";
-    setCurrentUserId(id);
-  }, []);
+useEffect(() => {
+  const id = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+
+  // If token or userId is missing, redirect to home/login
+  if (!token || !id) {
+    window.location.href = "/sign-up";
+    return;
+  }
+
+  setCurrentUserId(id);
+}, []);
+
 
   const fetchPosts = async () => {
     try {
@@ -51,37 +60,42 @@ const Feed = () => {
   }, []);
 
   const handleToggleLike = async (postId: string) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}/toggle-like`, {
-        method: "PUT",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+  if (!currentUserId) {
+    alert("Please log in to like posts.");
+    return;
+  }
 
-      if (res.ok) {
-        // Locally update the likes instead of re-fetching everything
-        setPosts((prevPosts) =>
-          prevPosts.map((post) => {
-            if (post._id === postId) {
-              const alreadyLiked = post.likes.includes(currentUserId);
-              const updatedLikes = alreadyLiked
-                ? post.likes.filter((id) => id !== currentUserId)
-                : [...post.likes, currentUserId];
-              return { ...post, likes: updatedLikes };
-            }
-            return post;
-          })
-        );
-      } else {
-        const data = await res.json();
-        console.error("Like toggle failed:", data.message);
-      }
-    } catch (err) {
-      console.error("Error toggling like:", err);
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}/toggle-like`, {
+      method: "PUT",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (res.ok) {
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
+          if (post._id === postId) {
+            const alreadyLiked = post.likes.includes(currentUserId);
+            const updatedLikes = alreadyLiked
+              ? post.likes.filter((id) => id !== currentUserId)
+              : [...post.likes, currentUserId];
+            return { ...post, likes: updatedLikes };
+          }
+          return post;
+        })
+      );
+    } else {
+      const data = await res.json();
+      console.error("Like toggle failed:", data.message);
     }
-  };
+  } catch (err) {
+    console.error("Error toggling like:", err);
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#2b2b2b] to-[#1a1a1a] text-white py-7">

@@ -75,14 +75,33 @@ const Profile = () => {
         setError("Failed to delete post")
       }
     }
+  
   }
 
   // --- Logout function added here ---
-  const handleLogout = () => {
-    localStorage.removeItem("userId")
-    localStorage.removeItem("userName")
-    window.location.href = "/"
+  const handleLogout = async () => {
+  // Remove client-side data
+  localStorage.removeItem("userId");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("token"); // ⬅️ Remove JWT token
+
+  // OPTIONAL: If token is stored in a cookie, hit backend logout API
+  try {
+    await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (err) {
+    if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Backend logout (if any) failed, proceeding with client logout");
   }
+  }
+  // Redirect to home page
+  window.location.href = "/";
+};
+
 
   return (
     <div className='p-4'>

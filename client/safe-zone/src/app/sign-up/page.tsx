@@ -79,6 +79,14 @@ export default function Signup() {
           Register & Send OTP
         </button>
       </form>
+      <div>
+        <p className="text-center text-gray-500">
+          Already have an account?{" "}
+          <a href="/login" className="text-blue-600 hover:underline">
+            Log in
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
