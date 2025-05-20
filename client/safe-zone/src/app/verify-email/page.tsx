@@ -38,7 +38,7 @@ export default function VerifyEmail() {
 
       setMessage(data.message || "Email verified successfully!")
       setTimeout(() => {
-        router.push("/Feed")
+        router.push("/login")
       }, 1500)
     } catch (err: unknown) {
       if (err instanceof Error) {
