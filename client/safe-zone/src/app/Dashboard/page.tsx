@@ -132,11 +132,11 @@ const Profile = () => {
         )
       )}
       <div>
-          <Link href="/CreatePost">
-                  <button className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white p-4 rounded-full shadow-lg transition">
-                    +
-                  </button>
-                </Link>
+        <Link href="/CreatePost">
+          <button className="fixed bottom-6 right-6 bg-pink-600 hover:bg-pink-700 text-white p-4 rounded-full shadow-lg transition">
+            +
+          </button>
+        </Link>
       </div>
     </div>
   )
